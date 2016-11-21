@@ -1,0 +1,102 @@
+{
+  "listeners": [
+    {
+      "port": 9211,
+      "filters": [
+        {
+          "type": "read",
+          "name": "http_connection_manager",
+          "config": {
+            "codec_type": "auto",
+            "http_codec_options": "no_compression",
+            "tracing": {
+              "operation_name": "ingress"
+            },
+            "idle_timeout_s": 840,
+            "access_log": [
+              {
+                "path": "ingress_http.log",
+                "filter": {
+                  "type": "not_healthcheck"
+                },
+                "format": "[%START_TIME%] \"%REQ(:METHOD)% %REQ(X-ENVOY-ORIGINAL-PATH?:PATH)% %PROTOCOL%\" %RESPONSE_CODE% %FAILURE_REASON% %BYTES_RECEIVED% %BYTES_SENT% %DURATION% %RESP(X-ENVOY-UPSTREAM-SERVICE-TIME)% \"%REQ(X-FORWARDED-FOR)%\" \"%REQ(USER-AGENT)%\" \"%REQ(X-REQUEST-ID)%\" \"%REQ(:AUTHORITY)%\"\n"
+              }
+            ],
+            "stat_prefix": "ingress_http",
+            "route_config": {
+              "virtual_hosts": [
+                {
+                  "name": "local_service",
+                  "domains": [
+                    "*"
+                  ],
+                  "routes": [
+                    {
+                      "timeout_ms": 0,
+                      "prefix": "/",
+                      "cluster": "local_service",
+                      "retry_policy": {
+                        "retry_on": "connect-failure,503",
+                        "num_retries": 20
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "filters": [
+              {
+                "type": "both",
+                "name": "health_check",
+                "config": {
+                  "pass_through_mode": true,
+                  "cache_time_ms": 2500,
+                  "endpoint": "/healthcheck"
+                }
+              },
+              {
+                "type": "decoder",
+                "name": "buffer",
+                "config": {
+                  "max_request_bytes": 5242880,
+                  "max_request_time_s": 120
+                }
+              },
+              {
+                "type": "decoder",
+                "name": "router",
+                "config": {}
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "admin": {
+    "access_log_path": "admin_access.log",
+    "port": 9901
+  },
+  "flags_path": "./flags",
+  "cluster_manager": {
+    "clusters": [
+      {
+        "name": "local_service",
+        "connect_timeout_ms": 250,
+        "type": "static",
+        "lb_type": "round_robin",
+        "circuit_breakers": {
+          "default": {
+            "max_pending_requests": 30,
+            "max_connections": 100
+          }
+        },
+        "hosts": [
+          {
+            "url": "tcp://127.0.0.1:8080"
+          }
+        ]
+      }
+    ]
+  }
+}

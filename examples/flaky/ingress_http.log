@@ -1,0 +1,4 @@
+[2016-11-21T00:06:40.011Z] "GET / HTTP/1.1" 0 - 0 0 5001 - "-" "hackney/1.6.3" "beff9b75-94df-4c3a-bc5c-93322dd7f528" "localhost:9211"
+[2016-11-21T00:10:40.345Z] "GET / HTTP/1.1" 0 - 0 0 5007 - "-" "hackney/1.6.3" "bfa55679-fd36-4c80-a228-105f8f6f186d" "localhost:9211"
+[2016-11-21T00:18:40.484Z] "GET / HTTP/1.1" 0 - 0 0 5002 - "-" "hackney/1.6.3" "922e23c1-5eed-4c4b-a12f-3f07cebbe949" "localhost:9211"
+[2016-11-21T00:20:45.340Z] "GET / HTTP/1.1" 500 - 0 428 1 1 "-" "hackney/1.6.3" "5ca54ba7-702c-4f05-ba8f-5876b8cf674a" "localhost:9211"

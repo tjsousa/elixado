@@ -1,0 +1,10 @@
+version: '2'
+services:
+  example:
+    build: .
+    volumes:
+      - .:/flaky
+      - ../../../elixado:/elixado
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
