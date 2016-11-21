@@ -36,7 +36,7 @@
                       "prefix": "/",
                       "cluster": "local_service",
                       "retry_policy": {
-                        "retry_on": "connect-failure,503",
+                        "retry_on": "connect-failure,5xx",
                         "num_retries": 20
                       }
                     }
